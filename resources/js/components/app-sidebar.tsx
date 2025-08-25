@@ -22,7 +22,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Store',
-        href: '#',
+        href: '/store',
         icon: HomeIcon,
         role: ['store index'],
     },
