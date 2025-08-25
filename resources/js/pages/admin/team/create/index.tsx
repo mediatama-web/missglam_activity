@@ -1,5 +1,6 @@
 import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem } from "@/types";
+import { BreadcrumbItem, Role } from "@/types";
+import { Store } from "@/types/store";
 import DataForm from "../Form";
 
 const breadcrumbs : BreadcrumbItem[] = [
@@ -16,12 +17,14 @@ const breadcrumbs : BreadcrumbItem[] = [
       href: '#',
   }
 ]
-export default function Create() {
+export default function Create({roles, stores} : {roles : Role[], stores : Store[]}) {
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <DataForm
-        submitUrl={route('store.store')}
+        submitUrl={route('team.store')}
         method="post"
+        role={roles}
+        store={stores}
       />
     </AppLayout>
   );

@@ -1,11 +1,13 @@
 
 import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem } from "@/types";
+import { BreadcrumbItem, Role, User } from "@/types";
 import { Store } from "@/types/store";
 import DataForm from "../Form";
 
 interface Props {
-  store: Store;
+  user: User;
+  roles: Role[];
+  stores: Store[]
 }
 
 const breadcrumbs : BreadcrumbItem[] = [
@@ -23,17 +25,23 @@ const breadcrumbs : BreadcrumbItem[] = [
   }
 ]
 
-export default function Edit({ store }: Props) {
+export default function Edit({ user, roles , stores}: Props) {
   
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <DataForm
         initialValues={{
-          name: store.name,
-          alamat: store.alamat,
+          name: user.name,
+          email: user.email,
+          image: null,
+          password: '',
+          store_id: user.store_id as number,
+          role_id: user.roles[0].id
         }}
-        submitUrl={route('store.update', store.id)}
+        submitUrl={route('team.update', user.id)}
         method="put"
+        role={roles}
+        store={stores}
       />
     </AppLayout>
   );

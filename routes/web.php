@@ -4,6 +4,7 @@ use App\Http\Controllers\Backend\{
     DashboardController,
     RolePermissionController,
     StoreController,
+    UserController,
 };
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,6 +25,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('store/{store}/edit', [StoreController::class, 'edit'])->name('store.edit');
     Route::put('store/{store}', [StoreController::class, 'update'])->name('store.update');
     Route::delete('store/{store}', [StoreController::class, 'destroy'])->name('store.destroy');
+
+    // team
+    Route::get('team', [UserController::class, 'index'])->name('team');
+    Route::get('team/create', [UserController::class, 'create'])->name('team.create');
+    Route::post('team', [UserController::class, 'store'])->name('team.store');
+    Route::get('team/{user}/edit', [UserController::class, 'edit'])->name('team.edit');
+    Route::put('team/{user}', [UserController::class, 'update'])->name('team.update');
+    Route::delete('team/{user}', [UserController::class, 'destroy'])->name('team.destroy');
 
     // chat
     Route::get('chat', function () {

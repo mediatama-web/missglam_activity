@@ -28,7 +28,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Team',
-        href: '#',
+        href: '/team',
         icon: User,
         role: ['team index'],
     },

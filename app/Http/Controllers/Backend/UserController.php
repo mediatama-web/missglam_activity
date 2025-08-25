@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Store;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
@@ -18,9 +19,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return Inertia::render('admin/user/index', [
-            'users' => User::with('roles')->get(),
-            'roles' => Role::all(),
+        return Inertia::render('admin/team/index', [
+            'users' => User::with('roles')->get()
         ]);
     }
 
@@ -29,7 +29,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $data['roles'] = Role::get();
+        $data['stores'] = Store::get();
+        return Inertia::render('admin/team/create/index', $data);
     }
 
     /**
@@ -82,24 +84,56 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        //
+        $data['user'] = $user->load('roles');
+        $data['roles'] = Role::get();
+        $data['stores'] = Store::get();
+        return Inertia::render('admin/team/edit/index', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class . ',email,' . $user->id,
+            'role' => 'required|string|exists:roles,name',
+        ], [
+            'name.required' => 'Name is required',
+            'email.required' => 'Email is required',
+            'role.exists' => 'Role not found',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        DB::begintransaction();
+
+        try {
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
+
+            $user->syncRoles($request->role);
+            DB::commit();
+            return back()->with('success', 'User updated successfully');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to update user');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return back()->with('success', 'User deleted successfully');
     }
 }

@@ -55,9 +55,11 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    avatar?: string;
+    image?: string;
+    store_id?: number;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    roles: Role[];
     [key: string]: unknown;
 }
