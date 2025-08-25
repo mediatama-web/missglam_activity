@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+venv
+__pycache__
+
+.env
+.env.local
+*.log
+
+.vscode
+.DS_Store
+.idea
+Thumbs.db
+
+.git
+.gitignore
